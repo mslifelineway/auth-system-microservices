@@ -6,11 +6,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local-auth.strategy';
 import { JwtStrategy } from './strategies/jwt-auth-strategy';
-// import { DatabaseModule } from '@app/common';
 import * as Joi from 'joi';
+import { DatabaseModule, RmqModule } from '@app/common';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
+    DatabaseModule,
+    RmqModule,
     forwardRef(() => AdministratorModule),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -20,6 +23,7 @@ import * as Joi from 'joi';
       }),
       envFilePath: './apps/administrator/.env',
     }),
+    PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
@@ -33,4 +37,4 @@ import * as Joi from 'joi';
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
 })
-export class AuthModule {}
+export class AuthModule1 {}

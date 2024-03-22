@@ -19,6 +19,8 @@ import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger();
+
   constructor(
     private readonly authService: AuthService,
     private readonly administratorService: AdministratorService,
@@ -39,9 +41,19 @@ export class AuthController {
     response.send(administrator);
   }
 
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  async logout(@Res({ passthrough: true }) response: Response) {
+    return this.authService.logout(response);
+  }
+
   @UseGuards(JwtAuthGuard)
   @MessagePattern('validate_user')
   async validateUser(@CurrentAdministrator() administrator: Administrator) {
+    this.logger.warn(
+      '++++++++ VALIDATE USER IN auth.controller ',
+      administrator ? JSON.stringify(administrator) : null,
+    );
     return administrator;
   }
 }
