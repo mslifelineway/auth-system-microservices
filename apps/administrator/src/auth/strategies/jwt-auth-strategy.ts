@@ -29,10 +29,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ administratorId }: TokenPayload) {
+  //This method will validate and get the user and set the user to the current execution context of rpc (Rabbit MQ server)
+  async validate(payload: TokenPayload) {
+    const { administratorId } = payload;
     try {
       return await this.administratorService.getAdministrator({
-        _id: ObjectId.createFromBase64(administratorId),
+        _id: administratorId as unknown as ObjectId
       });
     } catch (err) {
       throw new UnauthorizedException('You are not authorized.');

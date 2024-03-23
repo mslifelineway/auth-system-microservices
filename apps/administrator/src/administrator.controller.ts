@@ -2,8 +2,7 @@ import { Controller, Get, Logger, Param, UseGuards } from '@nestjs/common';
 import { AdministratorService } from './administrator.service';
 import { Administrator } from './administrator.schema';
 import mongoose from 'mongoose';
-import { ValidateParamIDDto } from '@app/common';
-import JwtAuthGuard from './auth/guards/jwt-auth.guard';
+import { ValidateParamIDDto, JwtAuthGuard } from '@app/common';
 
 @Controller('administrators')
 export class AdministratorController {

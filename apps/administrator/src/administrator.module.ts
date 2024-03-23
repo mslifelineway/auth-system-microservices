@@ -1,24 +1,20 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  forwardRef,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AdministratorController } from './administrator.controller';
 import { AdministratorService } from './administrator.service';
-// import {  } from './auth/auth.module';
-import { DatabaseModule, RmqModule, AuthModule } from '@app/common';
+import {
+  DatabaseModule,
+  RmqModule,
+  AuthMiddlewareModule,
+  JwtAuthGuard,
+} from '@app/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { Administrator, AdministratorSchema } from './administrator.schema';
 import { AdministratorRepository } from './administrator.repository';
 import { ADMINISTRATOR_SERVICE } from './constants/services';
-import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './auth/strategies/jwt-auth-strategy';
-import JwtAuthGuard from './auth/guards/jwt-auth.guard';
-import { AuthModule1 } from './auth/auth.module';
-// import { AuthModule1 } from './auth/auth.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -37,9 +33,11 @@ import { AuthModule1 } from './auth/auth.module';
     MongooseModule.forFeature([
       { name: Administrator.name, schema: AdministratorSchema },
     ]),
-    AuthModule1,
-    // AuthModule,
-    RmqModule,
+    RmqModule.register({
+      name: ADMINISTRATOR_SERVICE,
+    }),
+    AuthModule,
+    AuthMiddlewareModule,
   ],
   controllers: [AdministratorController],
   providers: [

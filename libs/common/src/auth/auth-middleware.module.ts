@@ -7,7 +7,7 @@ import { AUTH_SERVICE } from './auth.service';
   imports: [RmqModule.register({ name: AUTH_SERVICE })],
   exports: [RmqModule],
 })
-export class AuthModule implements NestModule {
+export class AuthMiddlewareModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(cookieParser()).forRoutes('*');
   }

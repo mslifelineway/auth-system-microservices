@@ -30,7 +30,7 @@ export class RmqModule {
           },
         ]),
       ],
-      exports: [ConfigService],
+      exports: [ClientsModule],
     };
   }
 }

@@ -11,18 +11,19 @@ import { EMPLOYEE_SERVICE } from './contants/services';
 
 @Module({
   imports: [
-    DatabaseModule,
+    
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
         PORT: Joi.number().required(),
-        RABBIT_MQ_URI: Joi.string().required(),
-        RABBIT_MQ_EMPLOYEE_QUEUE: Joi.string().required(),
-        RABBIT_MQ_AUTH_QUEUE: Joi.string().required(),
+        // RABBIT_MQ_URI: Joi.string().required(),
+        // RABBIT_MQ_EMPLOYEE_QUEUE: Joi.string().required(),
+        // RABBIT_MQ_AUTH_QUEUE: Joi.string().required(),
       }),
       envFilePath: './apps/employee/.env',
     }),
+    DatabaseModule,
     MongooseModule.forFeature([
       { name: Employee.name, schema: EmployeeSchema },
     ]),

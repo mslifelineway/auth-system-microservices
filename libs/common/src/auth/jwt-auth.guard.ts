@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -11,11 +12,13 @@ import { AUTH_SERVICE } from './auth.service';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
+  private readonly logger = new Logger();
   constructor(@Inject(AUTH_SERVICE) private authClient: ClientProxy) {}
 
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    this.logger.warn('############## CAN ACTIVATE INVOKED ########');
     const authentication = this.getAuthentication(context);
     return this.authClient
       .send('validate_user', {
@@ -32,6 +35,11 @@ export class JwtAuthGuard implements CanActivate {
   }
 
   private getAuthentication(context: ExecutionContext) {
+    this.logger.warn(
+      '############## getAuthentication INVOKED ########',
+      context.getType(),
+    );
+
     let authentication: string;
     if (context.getType() === 'rpc') {
       authentication = context.switchToRpc().getData().Authentication;
@@ -44,10 +52,16 @@ export class JwtAuthGuard implements CanActivate {
         'No value was provided for Authentication',
       );
     }
+    this.logger.warn(
+      '############## getAuthentication authentication ########',
+      authentication,
+    );
+
     return authentication;
   }
 
   private addUser(user: any, context: ExecutionContext) {
+    this.logger.warn('############## addUser ########', user);
     if (context.getType() === 'rpc') {
       context.switchToRpc().getData().user = user;
     } else if (context.getType() === 'http') {
