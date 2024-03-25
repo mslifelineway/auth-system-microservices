@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { EmployeeController } from './employee.controller';
 import { EmployeeService } from './employee.service';
-import { DatabaseModule, AuthModule, RmqModule } from '@app/common';
+import { DatabaseModule, AuthMiddlewareModule, RmqModule } from '@app/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Employee, EmployeeSchema } from './employee.schema';
 import { ConfigModule } from '@nestjs/config';
@@ -30,7 +30,7 @@ import { EMPLOYEE_SERVICE } from './contants/services';
     RmqModule.register({
       name: EMPLOYEE_SERVICE,
     }),
-    AuthModule,
+    AuthMiddlewareModule,
   ],
   controllers: [EmployeeController],
   providers: [EmployeeService, EmployeeRepository],
